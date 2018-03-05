@@ -14,5 +14,5 @@ A modular C# bot to analyze cryptomarket trends and trade cryptocurrency, with n
 - Create a pull request from *dev* to *master* at some point in your development. The earlier, the better.
 - Pull requests should be tailored for the user's understanding. Avoid technicalities and jargon when possible.
 - Pull requests should have an assignee (yourself), label, and project before being created. The reviewer can be set later.
-- Add bugs/issues using the (Issues Tracker)[https://github.com/itsmistad/CryptoTrader/issues]. They'll automatically be added to the (To-do column)[https://github.com/itsmistad/CryptoTrader/projects/1].
-- Track the progress of your pull requests in the (board)[https://github.com/itsmistad/CryptoTrader/projects/1]. Done and Graveyard columns are automated.
+- Add bugs/issues using the [Issues Tracker](https://github.com/itsmistad/CryptoTrader/issues). They'll automatically be added to the [To-do column](https://github.com/itsmistad/CryptoTrader/projects/1).
+- Track the progress of your pull requests in the [board](https://github.com/itsmistad/CryptoTrader/projects/1). Done and Graveyard columns are automated.
