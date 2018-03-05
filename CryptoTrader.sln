@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoTrader", "CryptoTrader\CryptoTrader.csproj", "{82380448-2DCA-4F69-A251-5E9C3A48EE3E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82380448-2DCA-4F69-A251-5E9C3A48EE3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82380448-2DCA-4F69-A251-5E9C3A48EE3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82380448-2DCA-4F69-A251-5E9C3A48EE3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82380448-2DCA-4F69-A251-5E9C3A48EE3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A162324-58F2-4B06-8E2E-F0F0422C2F4C}
+	EndGlobalSection
+EndGlobal
