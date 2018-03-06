@@ -23,7 +23,7 @@ namespace BinanceTrader.Services
             {
                 var formattedMessage = string.Format("[{0}]\t[{1}]\t{2}", TimeStamp, tag, string.Format(format, args));
                 Console.WriteLine(formattedMessage);
-                File.AppendAllText(_filePath, formattedMessage + Environment.NewLine);
+                File.AppendAllText(FilePath, formattedMessage + Environment.NewLine);
             }
             catch (Exception ex)
             {

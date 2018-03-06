@@ -14,10 +14,29 @@ namespace BinanceTrader
         public static JSONConfigService Config;
         public static List<JSONConfigService> Configs;
 
+        private static bool _isStopping;
         private static ManualResetEvent _stopEvent;
+
+        public static void Stop(string reason, params object[] args)
+        {
+            IsStopping = true;
+
+            var message = "Gently stopping. Reason: " + string.Format(reason, args);
+            Title = message;
+            Logger.Warn(message);
+
+            #region Gently stop everything.
+            foreach (var config in Configs)
+                if (config.TrySave())
+                    Logger.Info("Successfully saved a config file. [{0}]", config.FileName);
+            #endregion
+
+            _stopEvent.Set();
+        }
 
         private static void Initialize()
         {
+            Title = "Initializing...";
             Logger = new FileLoggerService("Logs");
             _stopEvent = new ManualResetEvent(false);
             Configs = new List<JSONConfigService>
@@ -34,29 +53,17 @@ namespace BinanceTrader
             foreach (var config in Configs)
                 if (config.TryLoad())
                     Logger.Info("Successfully loaded a config file. [{0}]", config.FileName);
-                else Stop("Failed to load a config. [{0}]", config.FileName);
+                else
+                {
+                    Stop("Failed to load a config. [{0}]", config.FileName);
+                    break;
+                }
+
+            Title = IsStopping ? "" : "Ready. Use CTRL+C to shutdown.";
         }
 
-        public static void Stop(string reason, params object[] args)
+        private static void HandleStop()
         {
-            Logger.Warn("Gently stopping. Reason: " + string.Format(reason, args));
-
-            #region Gently stop everything.
-            foreach (var config in Configs)
-                if (config.TrySave())
-                    Logger.Info("Successfully saved a config file. [{0}]", config.FileName);
-            #endregion
-
-            _stopEvent.Set();
-        }
-
-        private static void Main(string[] args)
-        {
-            Initialize();
-            Logger.Info("Ready. To shutdown, press CTRL+C.");
-
-            // Start a TraderService instance. For now, BinanceTraderService.
-
             _stopEvent.WaitOne();
 
             Logger.Info("Shutting down.");
@@ -64,5 +71,40 @@ namespace BinanceTrader
             Console.WriteLine("Press any key to continue...");
             Console.Read();
         }
+
+        private static void Main(string[] args)
+        {
+            Initialize();
+
+            // Start a TraderService instance. For now, BinanceTraderService.
+
+            HandleStop();
+        }
+
+        #region Properties
+        public static string Title
+        {
+            get
+            {
+                return Console.Title;
+            }
+            set
+            {
+                Console.Title = "CrpytoTrader by D. | " +  value;
+            }
+        }
+
+        public static bool IsStopping
+        {
+            get
+            {
+                return _isStopping;
+            }
+            private set
+            {
+                _isStopping = value;
+            }
+        }
+        #endregion
     }
 }
