@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BinanceTrader.Services.Interfaces
+namespace CryptoTrader.Service.Services.Interfaces
 {
+    /// <summary>
+    /// A log service interface with support for Info, Warn, Error, and Debug messages, as well as a generic Log function for custom tags.
+    /// </summary>
     public interface ILoggerService
     {
         void Log(string tag, string format, params object[] args);
