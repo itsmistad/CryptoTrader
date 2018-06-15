@@ -4,30 +4,35 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BinanceTrader.Services.Interfaces;
+using CryptoTrader.Service.Services.Interfaces;
 
-namespace BinanceTrader.Services
+namespace CryptoTrader.Service.Services
 {
+    /// <summary>
+    /// An implementation of ILoggerService that logs various messages to a formatted .log file.
+    /// </summary>
     public class FileLoggerService : ILoggerService
     {
         private string _filePath;
 
-        public FileLoggerService(string directoryPath)
+        public FileLoggerService()
         {
-            _filePath = Path.Combine(Directory.GetCurrentDirectory(), directoryPath, DateTime.UtcNow.ToString("yyyy-MM-ddTHH.mm.ssZ") + ".log");
+            var logsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+            _filePath = Path.Combine(logsPath, "CryptoTrader.Service." + DateTime.UtcNow.ToString("yyyy-MM-ddTHH.mm.ssZ") + ".log");
+            Directory.CreateDirectory(logsPath);
         }
 
         public void Log(string tag, string format, params object[] args)
         {
             try
             {
-                var formattedMessage = string.Format("[{0}]\t[{1}]\t{2}", TimeStamp, tag, string.Format(format, args));
+                var formattedMessage = string.Format("[{0}]\t[{1}]\t{2}", TimeStamp, tag, args != null ? string.Format(format, args) : format);
                 Console.WriteLine(formattedMessage);
-                File.AppendAllText(_filePath, formattedMessage + Environment.NewLine);
+                File.AppendAllText(FilePath, formattedMessage + Environment.NewLine);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("[{0}]\t[{1}]\t{2} [{3}]", TimeStamp, "ERROR", "Uh oh. That last message didn't log to the file. Is the stream or read-access blocked?", ex.Message);
+                Console.WriteLine("[{0}]\t[{1}]\t{2}", TimeStamp, "ERROR", "Uh oh. That last message didn't log to the file. Is the stream blocked?");
             }
         }
 

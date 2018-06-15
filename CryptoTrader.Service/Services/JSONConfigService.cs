@@ -4,20 +4,25 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BinanceTrader.Services.Interfaces;
+using CryptoTrader.Service.Services.Interfaces;
+using CryptoTrader.Service.Utilities;
+using CryptoTrader.Service.Utilities.Handlers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace BinanceTrader.Services
+namespace CryptoTrader.Service.Services
 {
-    public class JSONConfigService : IConfigService<JToken>
+    /// <summary>
+    /// An implementation of IConfigService that load a JSON file into a dictionary.
+    /// </summary>
+    public class JSONConfigService : IConfigService
     {
         private JObject _configObject;
         private string _filePath;
 
         public JSONConfigService(string filePath)
         {
-            _filePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+            _filePath = filePath;
         }
 
         public bool TryLoad()
@@ -26,9 +31,9 @@ namespace BinanceTrader.Services
             {
                 return (_configObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(_filePath))) != null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Program.Logger.Error("Uh oh. We couldn't load the config file [{0}]. Does it exist? [{1}]", FileName, ex.Message);
+                Log.Error("Uh oh. We couldn't load the config file [{0}]. Does it exist?", FileName);
                 return false;
             }
         }
@@ -37,11 +42,11 @@ namespace BinanceTrader.Services
         {
             try
             {
-                File.WriteAllText(_filePath, JsonConvert.SerializeObject(_configObject));
+                File.WriteAllText(_filePath, JsonConvert.SerializeObject(_configObject, Formatting.Indented));
             }
             catch (Exception ex)
             {
-                Program.Logger.Error("Uh oh. We couldn't save the config file [{0}]. Is access blocked? [{1}]", FileName, ex.Message);
+                Log.Error("Uh oh. We couldn't save the config file [{0}]. Is access blocked? [{1}]", FileName, ex.Message);
                 return false;
             }
 
@@ -49,7 +54,9 @@ namespace BinanceTrader.Services
         }
 
         #region Properties
-        public JToken this[string key]
+        private ILoggerService Log => Singleton.Get<LoggerHandler>();
+
+        public object this[string key]
         {
             get
             {
@@ -57,7 +64,7 @@ namespace BinanceTrader.Services
             }
             set
             {
-                _configObject[key] = value;
+                _configObject[key] = (JToken)value;
             }
         }
 
