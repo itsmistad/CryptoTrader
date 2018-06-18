@@ -1,6 +1,12 @@
 # CryptoTrader
 A modular C# bot to analyze cryptomarket trends and trade cryptocurrency, with native support for Binance.
 
+**Master Build Status**
+[![Build Status](https://travis-ci.com/itsmistad/CryptoTrader.svg?branch=master)](https://travis-ci.com/itsmistad/CryptoTrader)
+**Dev Built Status**
+[![Build Status](https://travis-ci.com/itsmistad/CryptoTrader.svg?branch=dev)](https://travis-ci.com/itsmistad/CryptoTrader)
+
+
 # Getting Started
 ###### Building on my machine
 1. Clone or download the project.
