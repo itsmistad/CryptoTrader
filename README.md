@@ -1,21 +1,19 @@
 # CryptoTrader
 A modular C# bot to analyze cryptomarket trends and trade cryptocurrency, with native support for Binance.
 
-# Development Conventions
-- Create a branch of *dev* for hotfixes and features.
-- Create a pull request of that branch.
-- Commit smaller changes to prevent reviewers from getting lost in the code.
-- Titles should encompass the changes.
-- Test before commiting.
-- Keep code modular.
-- Use "Updated", "Added", "Removed" in titles and descriptions.
-- End every line with a period.
-- Follow this format in descriptions (using line numbers when applicable):
-```
-- [<FILE> <LINES>] <INFO>
-```
-- Avoid technicalities and jargon in pull request titles and descriptions.
-- Assign a developer, label, and project while creating a pull request.
-- Assign a reviewer when the code is ready for review.
-- Add issues using the [Issues Tracker](https://github.com/itsmistad/CryptoTrader/issues).
-- Track pull requests on the [board](https://github.com/itsmistad/CryptoTrader/projects/1).
+# Getting Started
+###### Building on my machine
+1. Clone or download the project.
+	1. Use the **master** branch for stable code.
+	2. Use the **dev** branch for experimental/prerelease code.
+2. Open CryptoTrader.sln using VS 15/17.
+3. Clean and build the solution. Make sure you can run the service standalone.
+4. Break whatever you want.
+5. Repeat 3 until your cookies are done baking.
+
+###### Downloading Application
+1. Go to *Releases*.
+2. Download the release version of your choice.
+3. Extract the contents from the zip.
+4. Customize the configuration.
+5. Start *CryptoTrader.Service.exe*.
