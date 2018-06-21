@@ -1,9 +1,6 @@
 ﻿using CryptoTrader.Service.Utilities.Handlers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CryptoTrader.Service.Services.Conversion;
 
 namespace CryptoTrader.Service.Utilities
 {
@@ -17,34 +14,37 @@ namespace CryptoTrader.Service.Utilities
         public static void Initialize()
         {
             _handlers = new Dictionary<object, object>();
-            
-            try
-            {
-                Initialize<StopHandler>();
-                Initialize<ArgumentsHandler>();
-                Initialize<LoggerHandler>();
-                Initialize<ConfigHandler>();
-                Initialize<TraderHandler>();
 
+            #region Initialize Handlers
+            Initialize<StopHandler>();
+            Initialize<ArgumentsHandler>();
+            Initialize<LoggerHandler>();
+            Initialize<ConfigHandler>();
+            Initialize<TraderHandler>();
+            Initialize<BinanceHandler>();
+            #endregion
+
+            #region Initialize Services
+            Initialize<CurrencyConverterService>();
+            #endregion
+
+            if (!Get<StopHandler>().IsStopping)
                 IsInitialized = true;
-            }
-            catch (Exception) { }
         }
 
         public static T Get<T>()
         {
-            if (!_handlers.ContainsKey(typeof(T)))
-                throw new KeyNotFoundException("Trying to reach a handler before it has been initialized: " + typeof(T).Name);
-            
-            return (T)_handlers[typeof(T)];
+            if (_handlers.ContainsKey(typeof(T)))
+                return (T) _handlers[typeof(T)];
+            else return default(T);
         }
         
         private static void Initialize<T>() where T : new()
         {
-            // If something failed during any initialization, stop.
-            if (typeof(T) != typeof(StopHandler) && Get<StopHandler>().IsStopping)
-                throw new Exception("Initialization failed.");
-            _handlers.Add(typeof(T), new T());
+            if (Get<StopHandler>()?.IsStopping ?? false) // Prevents initialization after handler failure.
+                return;
+            if (!_handlers.ContainsKey(typeof(T))) // Prevents duplicate entries.
+                _handlers.Add(typeof(T), new T());
         }
 
         #region Properties

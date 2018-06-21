@@ -1,24 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CryptoTrader.Service.Services.Interfaces;
 
-namespace CryptoTrader.Service.Services
+namespace CryptoTrader.Service.Services.Logging
 {
+    /// <inheritdoc />
     /// <summary>
     /// An implementation of ILoggerService that logs various messages to a formatted .log file.
     /// </summary>
     public class FileLoggerService : ILoggerService
     {
-        private string _filePath;
+        public FileLoggerService() { }
 
-        public FileLoggerService()
+        public FileLoggerService(string filePath)
         {
             var logsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
-            _filePath = Path.Combine(logsPath, "CryptoTrader.Service." + DateTime.UtcNow.ToString("yyyy-MM-ddTHH.mm.ssZ") + ".log");
+            FilePath = Path.Combine(logsPath, "CryptoTrader.Service." + DateTime.UtcNow.ToString("yyyy-MM-ddTHH.mm.ssZ") + ".log");
             Directory.CreateDirectory(logsPath);
         }
 
@@ -57,37 +53,10 @@ namespace CryptoTrader.Service.Services
         }
 
         #region Properties
-        public string DirectoryPath
-        {
-            get
-            {
-                return Path.GetDirectoryName(_filePath);
-            }
-        }
-
-        public string FileName
-        {
-            get
-            {
-                return Path.GetFileName(_filePath);
-            }
-        }
-
-        public string FilePath
-        {
-            get
-            {
-                return _filePath;
-            }
-        }
-
-        public string TimeStamp
-        {
-            get
-            {
-                return DateTime.UtcNow.ToString("o");
-            }
-        }
+        public string DirectoryPath => Path.GetDirectoryName(FilePath);
+        public string FileName => Path.GetFileName(FilePath);
+        public string FilePath { get; }
+        public string TimeStamp => DateTime.UtcNow.ToString("o");
         #endregion
     }
 }

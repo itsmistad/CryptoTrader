@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Pipes;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
-using CryptoTrader.Service.Services.Interfaces;
-using CryptoTrader.Service.Services.Traders;
-using CryptoTrader.Service.Utilities;
-using CryptoTrader.Service.Utilities.Extensions;
+using CryptoTrader.Service.Services.Logging;
+using CryptoTrader.Service.Services.Trading;
 using Newtonsoft.Json.Linq;
 
 namespace CryptoTrader.Service.Utilities.Handlers
@@ -20,8 +11,8 @@ namespace CryptoTrader.Service.Utilities.Handlers
     {
         public event EventHandler OnTick;
 
-        private List<ITraderService> _traders;
-        private Timer _ticker;
+        private readonly List<ITraderService> _traders;
+        private readonly Timer _ticker;
 
         public TraderHandler()
         {
@@ -29,7 +20,7 @@ namespace CryptoTrader.Service.Utilities.Handlers
 
             CreateTraders();
 
-            _ticker = new Timer(_tickRateInMilliseconds);
+            _ticker = new Timer(TickRateInMilliseconds);
             _ticker.Elapsed += HandleTick;
             _ticker.Enabled = true;
             _ticker.Start();
@@ -73,16 +64,16 @@ namespace CryptoTrader.Service.Utilities.Handlers
 
         public T Create<T>() where T : new()
         {
-            T trader = new T();
+            var trader = new T();
             _traders.Add(trader as ITraderService);
 
             return trader;
         }
 
         #region Properties
-        private ILoggerService Log => Singleton.Get<LoggerHandler>();
-        private JToken Config => (JToken)Singleton.Get<ConfigHandler>().Service["Traders"];
-        private double _tickRateInMilliseconds => (double)Config["TickRateInMilliseconds"];
+        private static ILoggerService Log => Singleton.Get<LoggerHandler>();
+        private static JToken Config => (JToken)Singleton.Get<ConfigHandler>().Service["Traders"];
+        private double TickRateInMilliseconds => (double)Config["TickRateInMilliseconds"];
         #endregion
     }
 }

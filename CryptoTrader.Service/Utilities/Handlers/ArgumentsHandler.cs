@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CryptoTrader.Service.Utilities.Handlers
 {
@@ -11,7 +7,7 @@ namespace CryptoTrader.Service.Utilities.Handlers
     /// </summary>
     public class ArgumentsHandler
     {
-        private Dictionary<string, string> _arguments;
+        private readonly Dictionary<string, string> _arguments;
 
         public ArgumentsHandler()
         {

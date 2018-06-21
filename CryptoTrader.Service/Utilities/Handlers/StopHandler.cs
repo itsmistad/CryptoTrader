@@ -1,10 +1,6 @@
-﻿using CryptoTrader.Service.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
+using CryptoTrader.Service.Services.Logging;
+using Console = System.Console;
 
 namespace CryptoTrader.Service.Utilities.Handlers
 {
@@ -21,20 +17,21 @@ namespace CryptoTrader.Service.Utilities.Handlers
             Program.Title = message;
             IsStopping = true;
 
-            if (Log != null)
-                Log.Warn(message);
-            else
-                Console.WriteLine(message);
-
             if (Singleton.IsInitialized)
             {
+                Log.Warn(message);
+                Log.Warn("\t~-~-~-~-~ STOPPING ~-~-~-~-~");
+
                 Singleton.Get<TraderHandler>().Stop();
 
                 if (Singleton.Get<ConfigHandler>().Service.TrySave())
                     Log.Info("Successfully saved the configuration.");
                 else
                     Log.Error("Failed to save the configuration!");
+
+                Log.Info("Successfully shut down.");
             }
+            else Console.WriteLine(message);
 
             _stopEvent.Set();
         }
@@ -50,14 +47,13 @@ namespace CryptoTrader.Service.Utilities.Handlers
 
             _stopEvent.WaitOne();
 
-            Log.Info("Shutting down.");
             Console.WriteLine("Press any key to continue...");
             Console.Read();
         }
 
         #region Properties
-        private ManualResetEvent _stopEvent;
-        private ILoggerService Log => Singleton.Get<LoggerHandler>();
+        private readonly ManualResetEvent _stopEvent;
+        private static ILoggerService Log => Singleton.Get<LoggerHandler>();
         public bool IsStopping;
         #endregion
     }

@@ -1,21 +1,16 @@
-﻿using CryptoTrader.Service.Services;
-using CryptoTrader.Service.Services.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CryptoTrader.Service.Services.Configuration;
+using CryptoTrader.Service.Services.Logging;
 
 namespace CryptoTrader.Service.Utilities.Handlers
 {
     public class ConfigHandler
     {
-        private IConfigService _service;
-
         public ConfigHandler()
         {
             var args = Singleton.Get<ArgumentsHandler>();
+            
             if (args.Has("config"))
             {
                 switch (args["config"].ToLower())
@@ -23,12 +18,12 @@ namespace CryptoTrader.Service.Utilities.Handlers
                     //case "db":
                     //    throw new NotImplementedException();
                     case "json":
-                        _service = new JSONConfigService(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json"));
-                        _service.TryLoad();
+                        Service = new JsonConfigService(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json"));
+                        Service.TryLoad();
                         Log.Info("Successfully loaded configuration.");
                         break;
                     default:
-                        Program.Stop("Invalid configuration flag: {0}", args["config"]);
+                        Program.Stop($"Invalid configuration flag: {args["config"]}");
                         break;
                 }
             }
@@ -36,8 +31,8 @@ namespace CryptoTrader.Service.Utilities.Handlers
         }
 
         #region Properties
-        private ILoggerService Log => Singleton.Get<LoggerHandler>();
-        public IConfigService Service => _service;
+        private static ILoggerService Log => Singleton.Get<LoggerHandler>();
+        public IConfigService Service { get; }
         #endregion
     }
 }
