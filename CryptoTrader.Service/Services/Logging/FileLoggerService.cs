@@ -33,36 +33,16 @@ namespace CryptoTrader.Service.Services.Logging
             }
         }
 
-        public void Info(string format, params object[] args)
-        {
-            Console.Info(format, args);
-            Log("INFO", format, args);
-        }
-
-        public void Warn(string format, params object[] args)
-        {
-            Console.Warn(format, args);
-            Log("WARN", format, args);
-        }
-
-        public void Error(string format, params object[] args)
-        {
-            Console.Error(format, args);
-            Log("ERROR", format, args);
-        }
-
-        public void Debug(string format, params object[] args)
-        {
-            Console.Debug(format, args);
-            Log("DEBUG", format, args);
-        }
+        public void Info(string format, params object[] args) => Log("INFO", format, args);
+        public void Warn(string format, params object[] args) => Log("WARN", format, args);
+        public void Error(string format, params object[] args) => Log("ERROR", format, args);
+        public void Debug(string format, params object[] args) => Log("DEBUG", format, args);
 
         #region Properties
         public string DirectoryPath => Path.GetDirectoryName(FilePath);
         public string FileName => Path.GetFileName(FilePath);
         public string FilePath { get; }
         public static string TimeStamp => DateTime.UtcNow.ToString("s");
-        private static ILoggerService Console => Singleton.Get<LoggerHandler>().Console;
         #endregion
     }
 }
