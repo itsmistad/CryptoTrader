@@ -1,4 +1,7 @@
-﻿namespace CryptoTrader.Service.Services.Trading
+﻿using System.Collections.Generic;
+using CryptoTrader.Service.Services.Trading.Indicators;
+
+namespace CryptoTrader.Service.Services.Trading
 {
     /// <summary>
     /// A cryptocurrency market trader service interface.
@@ -10,5 +13,6 @@
         void Sell();
         void Panic();
         bool PanicCondition { get; }
+        List<IIndicator> Indicators { get; }
     }
 }

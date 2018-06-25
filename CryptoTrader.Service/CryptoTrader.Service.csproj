@@ -106,16 +106,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Services\Conversion\CurrencyConverterService.cs" />
+    <Compile Include="Services\Logging\ConsoleLoggerService.cs" />
     <Compile Include="Services\Trading\BinanceTraderService.cs" />
     <Compile Include="Services\Logging\FileLoggerService.cs" />
     <Compile Include="Services\Configuration\IConfigService.cs" />
     <Compile Include="Services\Logging\ILoggerService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Trading\Indicators\EMAIndicator.cs" />
+    <Compile Include="Services\Trading\Indicators\IIndicator.cs" />
+    <Compile Include="Services\Trading\Indicators\MACDIndicator.cs" />
     <Compile Include="Services\Trading\ITraderService.cs" />
     <Compile Include="Services\Configuration\JsonConfigService.cs" />
     <Compile Include="Utilities\Handlers\BinanceHandler.cs" />
     <Compile Include="Utilities\Handlers\ConfigHandler.cs" />
+    <Compile Include="Utilities\Handlers\IndicatorHandler.cs" />
     <Compile Include="Utilities\Handlers\LoggerHandler.cs" />
     <Compile Include="Utilities\Handlers\StopHandler.cs" />
     <Compile Include="Utilities\Singleton.cs" />
@@ -130,9 +135,7 @@
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\Trading\Indicators\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets" Condition="Exists('..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

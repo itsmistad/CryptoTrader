@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using Binance;
 using System.Reflection;
 using CryptoTrader.Service.Services.Logging;
+using CryptoTrader.Service.Services.Trading.Indicators;
 using CryptoTrader.Service.Utilities.Handlers;
 using CryptoTrader.Service.Utilities;
 
@@ -18,6 +21,10 @@ namespace CryptoTrader.Service.Services.Trading
         public BinanceTraderService()
         {
             _user = new BinanceApiUser(ApiKey, ApiSecret);
+
+            var indicators = Singleton.Get<IndicatorHandler>();
+            foreach (var indicator in ActiveIndicators)
+                indicators.Add(this, indicator);
         }
 
         public async void OnTick()
@@ -52,6 +59,7 @@ namespace CryptoTrader.Service.Services.Trading
 
         #region Properties
         private static JToken Config => ((JToken)Singleton.Get<ConfigHandler>().Service["Traders"])["Binance"];
+        private static string[] ActiveIndicators => Config["ActiveIndicators"].ToObject<string[]>();
         private static double TradeDifference => Config["TradeDifference"].ToObject<float>();
         private static double TradeProfit => Config["TradeProfit"].ToObject<float>();
         private static int TradeAmount => Config["TradeAmount"].ToObject<int>();
@@ -66,10 +74,11 @@ namespace CryptoTrader.Service.Services.Trading
         {
             get
             {
-                //TODO  Define the condition that would cause the binance trader service to panic-sell all units of the trading currency currently being held.
+                // TODO     Define the condition that would cause the binance trader service to panic-sell all units of the trading currency currently being held.
                 return false;
             }
         }
+        public List<IIndicator> Indicators => Singleton.Get<IndicatorHandler>().For(this);
         #endregion
     }
 }

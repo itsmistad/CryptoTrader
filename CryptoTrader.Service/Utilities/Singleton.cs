@@ -22,6 +22,7 @@ namespace CryptoTrader.Service.Utilities
             Initialize<ConfigHandler>();
             Initialize<TraderHandler>();
             Initialize<BinanceHandler>();
+            Initialize<IndicatorHandler>();
             #endregion
 
             #region Initialize Services

@@ -24,3 +24,26 @@ A modular C# bot to analyze cryptomarket trends and trade cryptocurrency, with n
 3. Extract the contents from the zip.
 4. Customize the configuration.
 5. Start *CryptoTrader.Service.exe*.
+
+# Default Configuration
+###### config.json
+```json
+{
+  "Traders": {
+    "Binance": {
+      "ActiveIndicators": [
+        "EMA",
+        "MACD"
+      ],
+      "TradeDifference": 0,
+      "TradeProfit": 0,
+      "TradeAmount": 0,
+      "BaseCurrency": "ETH",
+      "TradeCurrency": "XVG",
+      "APIKey": "?",
+      "SecretKey": "?"
+    },
+    "TickRateInMilliseconds": 3000
+  }
+}
+```

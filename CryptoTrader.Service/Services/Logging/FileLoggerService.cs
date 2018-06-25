@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using CryptoTrader.Service.Utilities;
+using CryptoTrader.Service.Utilities.Handlers;
 
 namespace CryptoTrader.Service.Services.Logging
 {
@@ -22,33 +24,36 @@ namespace CryptoTrader.Service.Services.Logging
         {
             try
             {
-                var formattedMessage = string.Format("[{0}]\t[{1}]\t{2}", TimeStamp, tag, args != null ? string.Format(format, args) : format);
-                Console.WriteLine(formattedMessage);
+                var formattedMessage = string.Format("[{0}\t{1}]\t{2}", TimeStamp, tag, args != null ? string.Format(format, args) : format);
                 File.AppendAllText(FilePath, formattedMessage + Environment.NewLine);
             }
             catch (Exception)
             {
-                Console.WriteLine("[{0}]\t[{1}]\t{2}", TimeStamp, "ERROR", "Uh oh. That last message didn't log to the file. Is the stream blocked?");
+                // ignored
             }
         }
 
         public void Info(string format, params object[] args)
         {
+            Console.Info(format, args);
             Log("INFO", format, args);
         }
 
         public void Warn(string format, params object[] args)
         {
+            Console.Warn(format, args);
             Log("WARN", format, args);
         }
 
         public void Error(string format, params object[] args)
         {
+            Console.Error(format, args);
             Log("ERROR", format, args);
         }
 
         public void Debug(string format, params object[] args)
         {
+            Console.Debug(format, args);
             Log("DEBUG", format, args);
         }
 
@@ -56,7 +61,8 @@ namespace CryptoTrader.Service.Services.Logging
         public string DirectoryPath => Path.GetDirectoryName(FilePath);
         public string FileName => Path.GetFileName(FilePath);
         public string FilePath { get; }
-        public string TimeStamp => DateTime.UtcNow.ToString("o");
+        public static string TimeStamp => DateTime.UtcNow.ToString("s");
+        private static ILoggerService Console => Singleton.Get<LoggerHandler>().Console;
         #endregion
     }
 }
