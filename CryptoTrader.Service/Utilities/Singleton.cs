@@ -20,9 +20,9 @@ namespace CryptoTrader.Service.Utilities
             Initialize<ArgumentsHandler>();
             Initialize<LoggerHandler>();
             Initialize<ConfigHandler>();
+            Initialize<IndicatorHandler>();
             Initialize<TraderHandler>();
             Initialize<BinanceHandler>();
-            Initialize<IndicatorHandler>();
             #endregion
 
             #region Initialize Services

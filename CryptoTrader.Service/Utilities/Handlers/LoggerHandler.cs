@@ -28,11 +28,14 @@ namespace CryptoTrader.Service.Utilities.Handlers
             else Program.Stop("No logger defined. Did you set the logger flag? ex: -logger local");
         }
 
+        public void Stop()
+        {
+            foreach (var logger in Loggers)
+                logger.Stop();
+        }
+
         public void Log(string tag, string format, params object[] args)
         {
-            if (tag.Length > 5) tag = tag.Substring(0, 5);
-            else if (tag.Length < 5) tag += " ";
-
             foreach (var logger in Loggers)
                 logger.Log(tag, format, args);
         }

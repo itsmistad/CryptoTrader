@@ -4,9 +4,11 @@ namespace CryptoTrader.Service.Services.Logging
 {
     public class ConsoleLoggerService : ILoggerService
     {
+        public void Stop() { }
+
         public void Log(string tag, string format, params object[] args)
         {
-            Console.WriteLine("[{0}\t{1}]\t{2}", TimeStamp, tag, args != null ? string.Format(format, args) : format);
+            Console.WriteLine("{0}\t{1}\t{2}", TimeStamp, tag, args != null ? string.Format(format, args) : format);
         }
 
         public void Info(string format, params object[] args)
