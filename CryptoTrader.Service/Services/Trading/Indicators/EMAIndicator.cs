@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,12 +12,10 @@ namespace CryptoTrader.Service.Services.Trading.Indicators
     {
         public void OnTick()
         {
-            throw new NotImplementedException();
         }
 
         public void Calculate()
         {
-            throw new NotImplementedException();
         }
     }
 }

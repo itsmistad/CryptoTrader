@@ -1,6 +1,9 @@
-﻿using System.Threading;
+﻿using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Threading;
 using CryptoTrader.Service.Services.Logging;
-using Console = System.Console;
+using Console = Colorful.Console;
 
 namespace CryptoTrader.Service.Utilities.Handlers
 {
@@ -19,8 +22,8 @@ namespace CryptoTrader.Service.Utilities.Handlers
 
             if (Singleton.IsInitialized)
             {
-                Log.Warn(message);
-                Log.Warn("\t~-~-~-~-~ STOPPING ~-~-~-~-~");
+                Log.Error("\t~-~-~-~-~ STOPPING ~-~-~-~-~");
+                Log.Error("\tReason: " + message);
 
                 Singleton.Get<TraderHandler>().Stop();
 
@@ -31,7 +34,7 @@ namespace CryptoTrader.Service.Utilities.Handlers
 
                 Log.Info("Successfully shut down.");
             }
-            else Console.WriteLine(message);
+            else Console.WriteLine(message, Color.DarkGray);
 
             _stopEvent.Set();
         }
@@ -39,17 +42,54 @@ namespace CryptoTrader.Service.Utilities.Handlers
         public void WaitForStop()
         {
             Program.Title = "Use CTRL+C to shutdown.";
-            Console.CancelKeyPress += (s, a) =>
-            {
-                Stop("CTRL+C.");
-                a.Cancel = true;
-            };
+            _handler += Handler;
+            SetConsoleCtrlHandler(_handler, true);
 
             _stopEvent.WaitOne();
 
-            Console.WriteLine("Press any key to continue...");
-            Console.Read();
+            Console.WriteLine("Press any key to continue...", Color.DarkGray);
+            Console.ReadKey();
         }
+
+        #region Override Handler
+        [DllImport("kernel32")]
+        private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
+        private delegate bool EventHandler(CtrlType sig);
+        private EventHandler _handler;
+
+        private enum CtrlType
+        {
+            CtrlCEvent = 0,
+            CtrlBreakEvent = 1,
+            CtrlCloseEvent = 2,
+            CtrlLogoffEvent = 5,
+            CtrlShutdownEvent = 6
+        }
+
+        private bool Handler(CtrlType sig)
+        {
+            switch (sig)
+            {
+                case CtrlType.CtrlCEvent:
+                    Stop("CTRL+C.");
+                    break;
+                case CtrlType.CtrlBreakEvent:
+                    Stop("User broke main thread.");
+                    break;
+                case CtrlType.CtrlCloseEvent:
+                    Stop("User closed window.");
+                    break;
+                case CtrlType.CtrlLogoffEvent:
+                    Stop("User is logging off.");
+                    break;
+                case CtrlType.CtrlShutdownEvent:
+                    Stop("System is shutting down.");
+                    break;
+            }
+
+            return true;
+        }
+        #endregion
 
         #region Properties
         private readonly ManualResetEvent _stopEvent;

@@ -15,7 +15,6 @@ namespace CryptoTrader.Service.Utilities.Handlers
             _traders = new List<ITraderService>();
 
             CreateTraders();
-            HookIndicators();
 
             _ticker = new Timer(TickRateInMilliseconds);
             _ticker.Elapsed += HandleTick;
@@ -34,16 +33,7 @@ namespace CryptoTrader.Service.Utilities.Handlers
             // Maybe pass in different parameters upon creation?
             // Where would these parameters be stored? And how?
             Create<BinanceTraderService>();
-
-            foreach (var trader in _traders)
-                OnTick += (sender, args) => trader.OnTick();
-        }
-
-        private void HookIndicators()
-        {
-            foreach (var trader in _traders)
-                foreach (var indicator in trader.Indicators)
-                    OnTick += (sender, args) => indicator.OnTick();
+            _traders.ForEach(t => OnTick += (sender, args) => t.OnTick());
         }
 
         public void HandleTick(object sender, ElapsedEventArgs args)

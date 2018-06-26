@@ -28,41 +28,12 @@ namespace CryptoTrader.Service.Utilities.Handlers
             else Program.Stop("No logger defined. Did you set the logger flag? ex: -logger local");
         }
 
-        public void Stop()
-        {
-            foreach (var logger in Loggers)
-                logger.Stop();
-        }
-
-        public void Log(string tag, string format, params object[] args)
-        {
-            foreach (var logger in Loggers)
-                logger.Log(tag, format, args);
-        }
-
-        public void Debug(string format, params object[] args)
-        {
-            foreach (var logger in Loggers)
-                logger.Debug(format, args);
-        }
-
-        public void Error(string format, params object[] args)
-        {
-            foreach (var logger in Loggers)
-                logger.Error(format, args);
-        }
-
-        public void Info(string format, params object[] args)
-        {
-            foreach (var logger in Loggers)
-                logger.Info(format, args);
-        }
-
-        public void Warn(string format, params object[] args)
-        {
-            foreach (var logger in Loggers)
-                logger.Warn(format, args);
-        }
+        public void Stop() => Loggers.ForEach(x => x.Stop());
+        public void Log(string tag, string format, params object[] args) => Loggers.ForEach(x => x.Log(tag, format, args));
+        public void Debug(string format, params object[] args) => Loggers.ForEach(x => x.Debug(format, args));
+        public void Error(string format, params object[] args) => Loggers.ForEach(x => x.Error(format, args));
+        public void Info(string format, params object[] args) => Loggers.ForEach(x => x.Info(format, args));
+        public void Warn(string format, params object[] args) => Loggers.ForEach(x => x.Warn(format, args));
 
         #region Properties
         public List<ILoggerService> Loggers { get; }

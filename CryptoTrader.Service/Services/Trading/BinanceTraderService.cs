@@ -29,17 +29,22 @@ namespace CryptoTrader.Service.Services.Trading
 
         public async void OnTick()
         {
-            Log.Info("Grabbing account info...");
-            var info = await Api.GetAccountInfoAsync(_user);
+            // Update Indicators
+            Indicators.ForEach(x => x.OnTick());
 
-            Log.Info(" - User: {0}", info.User.ApiKey);
-            Log.Info(" - Able to trade: {0}", info.Status.CanTrade);
-            Log.Info(" - Able to withdraw: {0}", info.Status.CanWithdraw);
-            Log.Info(" - Able to deposit: {0}", info.Status.CanDeposit);
-            Log.Info(" - Free {0}: {1}", BaseCurrency, info.GetBalance(BaseCurrency).Free);
-            Log.Info(" - Locked {0}: {1}", BaseCurrency, info.GetBalance(BaseCurrency).Locked);
-            Log.Info(" - Free {0}: {1}", TradeCurrency, info.GetBalance(TradeCurrency).Free);
-            Log.Info(" - Locked {0}: {1}", TradeCurrency, info.GetBalance(TradeCurrency).Locked);
+            if (Locked) return;
+
+            Locked = true;
+            var info = await Api.GetAccountInfoAsync(_user);
+            // Todo These sorts of calls should be moved to the CurrencyConverterService.
+            var basePrice = await Api.GetPriceAsync(Symbol.Cache.Get(BaseCurrency + "USDT"));
+            var tradePrice = await Api.GetPriceAsync(Symbol.Cache.Get(TradeCurrency + BaseCurrency));
+            Locked = false;
+
+            // Todo These sorts of calculations should be moved to the CurrencyConverterService.
+            var holding = (info.GetBalance(BaseCurrency).Free + info.GetBalance(BaseCurrency).Locked) * basePrice.Value;
+            var circulating = ((info.GetBalance(TradeCurrency).Free + info.GetBalance(TradeCurrency).Locked) * tradePrice.Value) * basePrice.Value;
+            Log.Info("{0} is holding {1} and circulating {2}.", info.User.ApiKey.Substring(0, 8), holding.ToString("C4"), circulating.ToString(("C6")));
         }
 
         public void Buy()
@@ -70,13 +75,11 @@ namespace CryptoTrader.Service.Services.Trading
         private static BinanceApi Api => Singleton.Get<BinanceHandler>().Api;
         private static ILoggerService Log => Singleton.Get<LoggerHandler>();
 
+        private bool Locked { get; set; }
+
         public bool PanicCondition
         {
-            get
-            {
-                // TODO     Define the condition that would cause the binance trader service to panic-sell all units of the trading currency currently being held.
-                return false;
-            }
+            get { return false; }
         }
         public List<IIndicator> Indicators => Singleton.Get<IndicatorHandler>().For(this);
         #endregion

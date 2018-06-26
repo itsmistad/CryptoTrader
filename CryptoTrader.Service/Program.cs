@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using CryptoTrader.Service.Utilities;
 using CryptoTrader.Service.Utilities.Handlers;
 
@@ -21,7 +22,7 @@ namespace CryptoTrader.Service
         public static string Title
         {
             get => Console.Title;
-            set => Console.Title = "CryptoTrader by D. | " +  value;
+            set => Console.Title = "CryptoTrader by D. | PID: " + Process.GetCurrentProcess().Id + " | " + value;
         }
         #endregion
     }
