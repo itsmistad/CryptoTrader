@@ -10,7 +10,7 @@ namespace CryptoTrader.Service.Services.Logging
 
         public void Log(string tag, string format, params object[] args)
         {
-            Console.WriteWithGradient($"{TimeStamp}\t", Color.PeachPuff, Color.MediumSlateBlue, 8);
+            Console.WriteWithGradient($"{TimeStamp}\t", Color.WhiteSmoke, Color.BlueViolet, 8);
             
             var tagColor = Color.WhiteSmoke;
             switch (tag)

@@ -1,2 +1,4 @@
 language: csharp
 solution: CryptoTrader.sln
+ notifications:
+    slack: ping-mobile:kfc1oS3uYuN1K7ARiieDhjKs
